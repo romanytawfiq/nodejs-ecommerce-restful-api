@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Category from './category.model.js';
 import { responses } from '#src/utils/response.js';
+import { ApiFeatures, type ApiQuery } from '#src/utils/api-features.js';
 import slugify from 'slugify';
 import lodash from 'lodash';
 
@@ -11,9 +12,14 @@ export const categoryController = {
    * @ACL Any
    * @response [Categories] - JSEND - 200
    */
-  getAllCategories: async (_req: Request, res: Response) => {
-    const categories = await Category.find();
-    return responses.success(categories, res);
+  getAllCategories: async (req: Request, res: Response) => {
+    const { data, pagination } = await new ApiFeatures(Category, req.query as unknown as ApiQuery)
+      .searchable(['name', 'slug'])
+      .sortable(['name', 'slug', 'createdAt', 'updatedAt'])
+      .selectable(['name', 'slug', 'image', 'createdAt', 'updatedAt'])
+      .exec();
+
+    return responses.success({ results: data.length, pagination, categories: data }, res);
   },
 
   /**
