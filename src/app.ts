@@ -9,6 +9,7 @@ import { morganMiddleware } from '#src/middlewares/logger.js';
 import { AppError, errorHandler } from '#src/middlewares/error-handler.js';
 import healthcheckRoutes from '#src/modules/healthcheck/healthcheck.route.js';
 import userRoutes from '#src/modules/user/user.route.js';
+import { responses } from './utils/response.js';
 
 export const createApp = (): Express => {
   const app = express();
@@ -28,6 +29,10 @@ export const createApp = (): Express => {
   app.use(compression());
 
   app.use(morganMiddleware);
+
+  app.get('/env', async (req, res, next) => {
+    return responses.success({ env: process.env }, res);
+  });
 
   app.use('/api', healthcheckRoutes);
   app.use('/api', userRoutes);

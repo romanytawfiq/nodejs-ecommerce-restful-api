@@ -1,6 +1,7 @@
 import { createApp } from './app.js';
 import { ENV } from '#src/config/env.js';
 import { logger } from '#src/middlewares/logger.js';
+import { connect } from 'mongoose';
 
 const startServer = () => {
   const app = createApp();
@@ -43,4 +44,13 @@ const startServer = () => {
   });
 };
 
-startServer();
+connect(process.env.MONGO_URI!)
+  .then((connection) => {
+    logger.info('Connected To MongoDB Server Successfuly');
+    startServer();
+  })
+  .catch((error: any) => {
+    logger.error('Failed to connect to MongoDB: ', error.message);
+    logger.error(error.stack);
+    process.exit(1);
+  });
