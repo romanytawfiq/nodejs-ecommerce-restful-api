@@ -31,7 +31,7 @@ export const createApp = (): Express => {
 
   app.use(morganMiddleware);
 
-  app.get('/env', async (req, res, next) => {
+  app.get('/env', async (_req, res) => {
     return responses.success({ env: process.env }, res);
   });
 

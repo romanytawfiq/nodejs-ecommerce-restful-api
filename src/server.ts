@@ -44,12 +44,12 @@ const startServer = () => {
   });
 };
 
-connect(process.env.MONGO_URI!)
-  .then((connection) => {
+connect(ENV.MONGO_URI)
+  .then(() => {
     logger.info('Connected To MongoDB Server Successfuly');
     startServer();
   })
-  .catch((error: any) => {
+  .catch((error: Error) => {
     logger.error('Failed to connect to MongoDB: ', error.message);
     logger.error(error.stack);
     process.exit(1);
