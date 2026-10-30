@@ -16,7 +16,7 @@ export const validate = (schema: ZodObject) => async (req: Request, _res: Respon
         path: issue.path.join('.'),
         message: issue.message,
       }));
-      return next(new AppError(`Validation Error: ${JSON.stringify(errors)}`, 400));
+      return next(new AppError(`${errors[0]?.message}`, 400));
     } else {
       next(error);
     }
